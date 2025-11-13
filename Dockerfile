@@ -10,7 +10,7 @@ COPY entrypoint.sh /entrypoint.sh
 COPY reboot.sh /usr/local/sbin/reboot
 
 # Monit 配置文件 复制 monitrc 到 /opt/.monitrc
-COPY monitrc /opt/.monitrc
+COPY .monitrc /opt/.monitrc
 
 # 创建软链接：/etc/monit/monitrc -> /opt/.monitrc
 RUN ln -sf /opt/.monitrc /etc/monit/monitrc && \
