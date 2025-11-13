@@ -1,7 +1,23 @@
 set daemon 5                 # 每 5 秒检查一次
-set logfile /opt/monit.log
+set logfile /var/log/monit.log
 
-# 启动 sshd 并监控
+# ------------------------------
+# 1. 监控 cron 服务
+# ------------------------------
+check process cron with pidfile /var/run/crond.pid
+    start program = "/usr/sbin/cron -f" with timeout 30 seconds
+    stop program  = "/usr/bin/pkill -9 cron"
+
+# ------------------------------
+# 2. 监控 /opt/crontab 文件变化 → 重载 cron
+# ------------------------------
+check file crontab_file with path /opt/crontab
+    if changed checksum then exec "/usr/bin/pkill -HUP cron"
+    if changed timestamp then exec "/usr/bin/pkill -HUP cron"
+
+# ------------------------------
+# 3. 监控 sshd
+# ------------------------------
 check process sshd with pidfile /var/run/sshd.pid
     start program = "/usr/sbin/sshd -D" with timeout 30 seconds
     stop program  = "/usr/bin/pkill -9 sshd"
