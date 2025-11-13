@@ -11,6 +11,7 @@ COPY reboot.sh /usr/local/sbin/reboot
 
 # Monit 配置文件 复制 monitrc 到 /opt/.monitrc
 COPY .monitrc /opt/.monitrc
+COPY .crontab /opt/.crontab
 
 
 
@@ -24,11 +25,6 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     chmod +x /usr/local/sbin/reboot; \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime; \
     echo $TZ > /etc/timezone
-
-# 创建软链接：/etc/monit/monitrc -> /opt/.monitrc
-RUN rm -f /etc/monit/monitrc
-RUN ln -sf /opt/.monitrc /etc/monit/monitrc && \
-    chmod 600 /opt/.monitrc
 
 EXPOSE 22
 
