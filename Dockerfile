@@ -9,14 +9,6 @@ ENV TZ=Asia/Shanghai \
 COPY entrypoint.sh /entrypoint.sh
 COPY reboot.sh /usr/local/sbin/reboot
 
-RUN [ ! -d "/opt" ] && mkdir /opt
-
-# Monit 配置文件 复制 monitrc 到 /opt/.monitrc
-COPY .monitrc /opt/.monitrc
-COPY .crontab /opt/.crontab
-
-
-
 RUN export DEBIAN_FRONTEND=noninteractive; \
     apt-get update; \
     apt-get install -y tzdata openssh-server sudo curl ca-certificates wget vim net-tools monit cron zip unzip iputils-ping telnet git iproute2 --no-install-recommends; \
@@ -28,6 +20,11 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime; \
     echo $TZ > /etc/timezone
 
+RUN mkdir -p /opt
+
+# Monit 配置文件 复制 monitrc 到 /opt/.monitrc
+COPY .monitrc /opt/.monitrc
+COPY .crontab /opt/.crontab
 
 # 创建软链接：/etc/monit/monitrc -> /opt/.monitrc
 RUN rm -f /etc/monit/monitrc && \
