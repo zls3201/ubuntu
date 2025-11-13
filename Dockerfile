@@ -27,7 +27,8 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
 
 # 创建软链接：/etc/monit/monitrc -> /opt/.monitrc
 RUN rm -f /etc/monit/monitrc
-RUN ln -s /opt/.monitrc /etc/monit/monitrc
+RUN ln -sf /opt/.monitrc /etc/monit/monitrc && \
+    chmod 600 /opt/.monitrc
 
 EXPOSE 22
 
