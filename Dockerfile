@@ -1,17 +1,14 @@
 FROM ubuntu:22.04
 
-LABEL org.opencontainers.image.source="https://github.com/vevc/ubuntu"
+LABEL org.opencontainers.image.source="https://github.com/zls3201/ubuntu"
 
 ENV TZ=Asia/Shanghai \
     SSH_USER=ubuntu \
     SSH_PASSWORD=ubuntu!23
 
-COPY entrypoint.sh /entrypoint.sh
-COPY reboot.sh /usr/local/sbin/reboot
-
 RUN export DEBIAN_FRONTEND=noninteractive; \
     apt-get update; \
-    apt-get install -y tzdata openssh-server sudo curl ca-certificates wget vim net-tools monit cron zip unzip iputils-ping telnet git iproute2 --no-install-recommends; \
+    apt-get install -y tzdata openssh-server sudo curl ca-certificates wget vim net-tools supervisor cron zip unzip iputils-ping telnet git iproute2 --no-install-recommends; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*; \
     mkdir /var/run/sshd; \
@@ -19,20 +16,6 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     chmod +x /usr/local/sbin/reboot; \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime; \
     echo $TZ > /etc/timezone
-
-RUN mkdir -p /opt
-
-# Monit 配置文件 复制 monitrc 到 /opt/.monitrc
-COPY .monitrc /opt/.monitrc
-COPY .crontab /opt/.crontab
-
-# 创建软链接：/etc/monit/monitrc -> /opt/.monitrc
-RUN rm -f /etc/monit/monitrc && \
-    ln -sf /opt/.monitrc /etc/monit/monitrc && \
-    chmod 600 /opt/.monitrc
-
-RUN ln -sf /opt/.crontab /etc/crontab  && \
-    chmod 644 /opt/.crontab
 
 EXPOSE 22
 
