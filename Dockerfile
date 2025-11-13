@@ -26,6 +26,15 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime; \
     echo $TZ > /etc/timezone
 
+
+# 创建软链接：/etc/monit/monitrc -> /opt/.monitrc
+RUN rm -f /etc/monit/monitrc && \
+    ln -sf /opt/.monitrc /etc/monit/monitrc && \
+    chmod 600 /opt/.monitrc
+
+RUN ln -sf /opt/.crontab /etc/crontab  && \
+    chmod 644 /opt/.crontab
+
 EXPOSE 22
 
 ENTRYPOINT ["/entrypoint.sh"]
