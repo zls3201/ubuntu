@@ -5,6 +5,14 @@ set -e
 # 确保日志目录存在
 mkdir -p /var/log
 
+# 创建软链接：/etc/monit/monitrc -> /opt/.monitrc
+rm -f /etc/monit/monitrc
+ln -sf /opt/.monitrc /etc/monit/monitrc
+chmod 600 /opt/.monitrc
+
+RUN ln -sf /opt/.crontab /etc/crontab
+chmod 644 /opt/.crontab
+
 useradd -m -s /bin/bash $SSH_USER
 echo "$SSH_USER:$SSH_PASSWORD" | chpasswd
 
