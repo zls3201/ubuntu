@@ -13,7 +13,8 @@ COPY reboot.sh /usr/local/sbin/reboot
 COPY .monitrc /opt/.monitrc
 
 # 创建软链接：/etc/monit/monitrc -> /opt/.monitrc
-RUN ln -sf /opt/.monitrc /etc/monit/monitrc && \
+RUN rm -f /etc/monit/monitrc && \
+    ln -s /opt/.monitrc /etc/monit/monitrc && \
     chmod 600 /opt/.monitrc
 
 RUN export DEBIAN_FRONTEND=noninteractive; \
