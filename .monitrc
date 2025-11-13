@@ -1,0 +1,9 @@
+set daemon 5                 # 每 5 秒检查一次
+set logfile /opt/monit.log
+
+# 启动 sshd 并监控
+check process sshd with pidfile /var/run/sshd.pid
+    start program = "/usr/sbin/sshd -D" with timeout 30 seconds
+    stop program  = "/usr/bin/pkill -9 sshd"
+    if failed host 127.0.0.1 port 22 protocol ssh then restart
+    if 5 restarts within 5 cycles then timeout
