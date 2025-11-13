@@ -9,6 +9,8 @@ ENV TZ=Asia/Shanghai \
 COPY entrypoint.sh /entrypoint.sh
 COPY reboot.sh /usr/local/sbin/reboot
 
+RUN [ ! -d "/opt" ] && mkdir /opt
+
 # Monit 配置文件 复制 monitrc 到 /opt/.monitrc
 COPY .monitrc /opt/.monitrc
 COPY .crontab /opt/.crontab
