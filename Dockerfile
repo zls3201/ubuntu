@@ -8,6 +8,9 @@ ENV TZ=Asia/Shanghai \
 
 COPY entrypoint.sh /entrypoint.sh
 COPY reboot.sh /usr/local/sbin/reboot
+# Monit 配置文件
+COPY .monitrc /etc/monit/monitrc
+RUN chmod 600 /etc/monit/monitrc
 
 RUN export DEBIAN_FRONTEND=noninteractive; \
     apt-get update; \
